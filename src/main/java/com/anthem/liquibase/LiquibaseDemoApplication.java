@@ -1,0 +1,26 @@
+package com.anthem.liquibase;
+
+import java.sql.SQLException;
+
+import org.h2.tools.Server;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class LiquibaseDemoApplication {
+
+	@Value( "${db.port}" )
+	private String port;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(LiquibaseDemoApplication.class, args);
+	}
+
+	@Bean(initMethod = "start", destroyMethod = "stop")
+	public Server inMemoryH2DatabaseaServer() throws SQLException {
+	    return Server.createTcpServer(
+	      "-tcp", "-tcpAllowOthers", "-tcpPort", port);
+	}
+}
